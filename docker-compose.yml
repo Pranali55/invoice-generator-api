@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "Invoice@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+  backend:
+    build: ./backend-dotnet
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=InvoiceDb;User=sa;Password=Invoice@123;TrustServerCertificate=True
+      - Jwt__Secret=invoice-super-secret-key-min-32-chars!!
+      - PdfService__BaseUrl=http://pdf-service:8000
+      - Smtp__Host=${SMTP_HOST}
+      - Smtp__Port=${SMTP_PORT}
+      - Smtp__User=${SMTP_USER}
+      - Smtp__Pass=${SMTP_PASS}
+    depends_on:
+      - db
+      - pdf-service
+
+  pdf-service:
+    build: ./python-pdf-service
+    ports:
+      - "8000:8000"

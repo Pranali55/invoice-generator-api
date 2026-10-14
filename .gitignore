@@ -1,0 +1,22 @@
+# .env
+.env
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Docker
+.dockerignore
+
+# OS
+.DS_Store
+Thumbs.db
